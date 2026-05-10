@@ -2,7 +2,7 @@
 
 > A multi-agent AI system that autonomously conducts deep market research,
 > performs SWOT analysis, and generates professional reports — powered by
-> **CrewAI + Mistral (Ollama) + Flask + React**.
+> **CrewAI + OpenAI GPT-4o + Flask + React**.
 
 ---
 
@@ -33,7 +33,7 @@
 │  │                  └──────────────┘            │   │
 │  └──────────────────────────────────────────────┘   │
 │                                                     │
-│  Intelligence: Mistral via Ollama (local/free)      │
+│  Intelligence: OpenAI GPT-4o                        │
 │  Memory: SQLite (report history)                    │
 └─────────────────────────────────────────────────────┘
 ```
@@ -46,8 +46,7 @@
 |---|---|---|
 | Python 3.10+ | Backend runtime | python.org |
 | Node.js 18+ | Frontend runtime | nodejs.org |
-| Ollama | Local LLM runner | ollama.com |
-| Mistral model | AI reasoning | `ollama pull mistral` |
+| OpenAI API key | GPT-4o access | platform.openai.com |
 
 ---
 
@@ -59,14 +58,7 @@
 cd "SYNAPSE-AGENTIC-AI-MARKET-RESEARCH-SYSTEM"
 ```
 
-### 2. Start Ollama with Mistral
-
-```bash
-ollama serve
-ollama pull mistral
-```
-
-### 3. Backend Setup
+### 2. Backend Setup
 
 ```bash
 cd backend
@@ -78,14 +70,14 @@ pip install -r requirements.txt
 
 # Configure environment
 copy .env.example .env
-# Edit .env and add your SERPER_API_KEY and FIRECRAWL_API_KEY
+# Edit .env and add your OPENAI_API_KEY, SERPER_API_KEY and FIRECRAWL_API_KEY
 
 python app.py
 ```
 
 Backend runs at: `http://localhost:5000`
 
-### 4. Frontend Setup
+### 3. Frontend Setup
 
 ```bash
 cd frontend
@@ -161,7 +153,7 @@ SYNAPSE-AGENTIC-AI-MARKET-RESEARCH-SYSTEM/
 | Layer | Technology |
 |---|---|
 | Orchestration | CrewAI |
-| Intelligence | Mistral via Ollama (free, local) |
+| Intelligence | OpenAI GPT-4o |
 | Backend | Flask + Flask-SocketIO |
 | Frontend | React 18 + Vite + Tailwind CSS |
 | Real-time | Socket.IO (WebSockets) |
