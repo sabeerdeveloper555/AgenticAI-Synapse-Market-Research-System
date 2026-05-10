@@ -8,35 +8,153 @@
 
 ## Architecture
 
+### High-Level System Overview
+
+```mermaid
+graph TB
+    subgraph Frontend["🖥️ Frontend — React 18 + Vite + Tailwind"]
+        SB[SearchBar]
+        AL[AgentLog]
+        RV[ReportViewer]
+        RH[ReportHistory]
+        APP[App.jsx - State Hub]
+        SB --> APP
+        APP --> AL
+        APP --> RV
+        APP --> RH
+    end
+
+    subgraph Backend["⚙️ Backend — Flask + Socket.IO"]
+        subgraph Crew["CrewAI Orchestrator"]
+            TR[🔍 Trend Researcher]
+            SA[🧠 Strategic Analyst]
+            EE[✍️ Executive Editor]
+            TR -->|research_output| SA
+            SA -->|analysis_output| EE
+        end
+        REST[REST API\n/api/reports]
+        DB[(SQLite\nreports.db)]
+        EE --> DB
+        REST --> DB
+    end
+
+    subgraph External["🌐 External Services"]
+        SERPER[Serper.dev\nWeb Search]
+        OPENAI[OpenAI\nGPT-4o-mini]
+        FIRECRAWL[Firecrawl\nWeb Scraper]
+    end
+
+    APP <-->|WebSocket\nSocket.IO| Crew
+    RH <-->|HTTP REST| REST
+    TR <-->|API Call| SERPER
+    Crew <-->|LLM Calls| OPENAI
+    TR -.->|optional| FIRECRAWL
 ```
-┌─────────────────────────────────────────────────────┐
-│                   React Frontend                    │
-│  SearchBar · AgentLog · ReportViewer · History      │
-└────────────────────┬────────────────────────────────┘
-                     │ WebSocket (Socket.IO)
-┌────────────────────▼────────────────────────────────┐
-│              Flask + Socket.IO Backend              │
-│                                                     │
-│  ┌──────────────────────────────────────────────┐   │
-│  │            CrewAI Orchestrator               │   │
-│  │  ┌──────────────┐  ┌───────────────────┐    │   │
-│  │  │   Trend      │  │    Strategic      │    │   │
-│  │  │  Researcher  │→ │    Analyst        │→   │   │
-│  │  │  (Serper +   │  │    (SWOT +        │    │   │
-│  │  │  Firecrawl)  │  │    Insights)      │    │   │
-│  │  └──────────────┘  └───────────────────┘    │   │
-│  │                         ↓                   │   │
-│  │                  ┌──────────────┐            │   │
-│  │                  │  Executive   │            │   │
-│  │                  │  Editor      │            │   │
-│  │                  │  (MD Report) │            │   │
-│  │                  └──────────────┘            │   │
-│  └──────────────────────────────────────────────┘   │
-│                                                     │
-│  Intelligence: OpenAI GPT-4o                        │
-│  Memory: SQLite (report history)                    │
-└─────────────────────────────────────────────────────┘
+
+### Agent Pipeline
+
+```mermaid
+flowchart TD
+    INPUT([🧑 User Input\ne.g. Cryptocurrency Market])
+
+    subgraph TASK1["Task 1 — Market Research"]
+        TR["🔍 Trend Researcher\nLLM: GPT-4o-mini | Temp: 0.3 | Max Iter: 10"]
+        SEARCH[SerperSearchTool → Top 6 Google Results]
+        TR <--> SEARCH
+    end
+
+    subgraph TASK2["Task 2 — Strategic Analysis"]
+        SA["🧠 Strategic Analyst\nLLM: GPT-4o-mini | Temp: 0.3 | Max Iter: 8"]
+    end
+
+    subgraph TASK3["Task 3 — Report Generation"]
+        EE["✍️ Executive Editor\nLLM: GPT-4o-mini | Temp: 0.3 | Max Iter: 8"]
+    end
+
+    OUTPUT1["📄 Research Brief 600+ words\n• Key statistics • 5-8 trends • Competitive landscape"]
+    OUTPUT2["📊 Strategic Analysis 700+ words\n• SWOT Matrix • Risk matrix • Growth ranking"]
+    OUTPUT3["📑 Markdown Report 1000+ words\n• 9 structured sections"]
+
+    DB[(SQLite DB)]
+    FRONTEND[🖥️ Frontend ReportViewer]
+
+    INPUT --> TASK1
+    TASK1 --> OUTPUT1
+    OUTPUT1 -->|context| TASK2
+    TASK2 --> OUTPUT2
+    OUTPUT2 -->|context| TASK3
+    TASK3 --> OUTPUT3
+    OUTPUT3 --> DB
+    OUTPUT3 --> FRONTEND
 ```
+
+### Real-Time Data Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant FE as React Frontend
+    participant Flask as Flask Server
+    participant Crew as CrewAI Crew
+    participant Serper as Serper API
+    participant DB as SQLite DB
+
+    User->>FE: Enter topic & click Research
+    FE->>Flask: emit start_research(topic)
+    Flask->>Crew: spawn daemon thread
+
+    Flask-->>FE: agent_log (Trend Researcher started)
+    Crew->>Serper: web_search(query)
+    Serper-->>Crew: top 6 search results
+    Flask-->>FE: agent_log (done ✓)
+
+    Flask-->>FE: agent_log (Strategic Analyst started)
+    Note over Crew: Analyses research output
+    Flask-->>FE: agent_log (done ✓)
+
+    Flask-->>FE: agent_log (Executive Editor started)
+    Note over Crew: Generates Markdown report
+    Flask-->>FE: agent_log (done ✓)
+
+    Crew->>DB: save_report(topic, content)
+    Flask-->>FE: research_complete(report, report_id)
+    FE->>User: Display rendered report
+```
+
+### Component Interaction
+
+```mermaid
+graph LR
+    subgraph FE["Frontend"]
+        APP[App.jsx]
+        SB[SearchBar]
+        AL[AgentLog]
+        RV[ReportViewer]
+        RH[ReportHistory]
+    end
+
+    subgraph BE["Backend"]
+        WS[Socket.IO Handler]
+        REST[REST Endpoints]
+        WORKER[research_worker\ndaemon thread]
+        CREW[CrewAI Crew]
+        DB[(SQLite)]
+    end
+
+    SB -->|onSearch| APP
+    APP -->|logs| AL
+    APP -->|report| RV
+    APP -->|onLoad| RH
+    APP <-->|WebSocket| WS
+    RH <-->|HTTP| REST
+    WS --> WORKER
+    WORKER --> CREW
+    CREW -->|agent_log events| WS
+    CREW -->|save| DB
+    REST <--> DB
+```
+
+> Full system design with detailed diagrams → [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md)
 
 ---
 
