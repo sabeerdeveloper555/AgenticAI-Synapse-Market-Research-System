@@ -160,14 +160,3 @@ SYNAPSE-AGENTIC-AI-MARKET-RESEARCH-SYSTEM/
 | Search | Serper.dev + Firecrawl |
 | Memory | SQLite |
 
----
-
-## Group Members — KIET
-
-| Name | ID |
-|---|---|
-| Sabeer Alam | 64884 |
-| Syed Danish Mehmood | 64999 |
-| Syed Ali Haider Zaidi | 65051 |
-
-**Course:** Agentic AI | **Instructor:** Syed Farhan Mohsin
