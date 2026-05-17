@@ -275,6 +275,6 @@ SYNAPSE-AGENTIC-AI-MARKET-RESEARCH-SYSTEM/
 | Backend | Flask + Flask-SocketIO |
 | Frontend | React 18 + Vite + Tailwind CSS |
 | Real-time | Socket.IO (WebSockets) |
-| Search | Serper.dev + Firecrawl |
+| Search | Serper.dev |
 | Memory | SQLite |
 
