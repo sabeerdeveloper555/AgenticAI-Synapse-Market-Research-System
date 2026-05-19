@@ -25,15 +25,19 @@ def run_research(topic: str, emit_log=None) -> str:
     research_task = Task(
         description=(
             f"Conduct comprehensive market research on: **{topic}**\n\n"
-            "Your deliverable must include:\n"
+            "IMPORTANT INSTRUCTIONS:\n"
+            "- Perform exactly 3-4 web searches using DIFFERENT search queries each time.\n"
+            "- After your searches, IMMEDIATELY write your final answer. Do NOT search again.\n"
+            "- Never repeat a search query you have already used.\n\n"
+            "Your final answer must include:\n"
             "1. Current market size and growth rate (with statistics)\n"
             "2. Top 5-8 key trends shaping this market in 2024-2025\n"
             "3. Major players and competitive landscape overview\n"
             "4. Recent developments (last 6-12 months)\n"
             "5. Emerging technologies or innovations in this space\n"
             "6. Key market segments and their performance\n\n"
-            "Search for recent data, industry reports, and news articles. "
-            "Be specific with numbers, percentages, and sources."
+            "Be specific with numbers, percentages, and sources. "
+            "Once you have results from 3-4 searches, stop searching and write your Final Answer."
         ),
         expected_output=(
             "A detailed research brief with current statistics, trend analysis, "
@@ -49,6 +53,8 @@ def run_research(topic: str, emit_log=None) -> str:
     analysis_task = Task(
         description=(
             f"Using the research data provided, perform a deep strategic analysis of: **{topic}**\n\n"
+            "IMPORTANT: You already have all the data you need from the research task context. "
+            "Do NOT use any search tools. Write your analysis directly as your Final Answer.\n\n"
             "Deliver:\n"
             "1. **SWOT Analysis** — 4-6 detailed points per quadrant (Strengths, Weaknesses, "
             "Opportunities, Threats)\n"
@@ -73,6 +79,8 @@ def run_research(topic: str, emit_log=None) -> str:
     report_task = Task(
         description=(
             f"Using all research and analysis provided, write a professional market research report on: **{topic}**\n\n"
+            "IMPORTANT: You already have all the data you need from the context. "
+            "Do NOT use any search tools. Write the full report directly as your Final Answer.\n\n"
             "The report must follow this exact structure:\n\n"
             "# [Topic] — Market Research Report\n"
             "*(Prepared by Synapse Agentic AI | [Current Date])*\n\n"

@@ -20,5 +20,6 @@ def create_executive_editor():
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=8,
+        max_iter=15,
+        max_execution_time=180,
     )

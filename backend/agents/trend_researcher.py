@@ -20,5 +20,6 @@ def create_trend_researcher(tools):
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=10,
+        max_iter=25,
+        max_execution_time=300,
     )
