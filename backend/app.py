@@ -18,6 +18,9 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 init_db()
 
+active_sessions = set()
+active_sessions_lock = threading.Lock()
+
 
 def research_worker(topic, session_id):
     def emit_log(agent, message, status="working"):
@@ -38,6 +41,9 @@ def research_worker(topic, session_id):
         )
     except Exception as e:
         socketio.emit("research_error", {"error": str(e)}, room=session_id)
+    finally:
+        with active_sessions_lock:
+            active_sessions.discard(session_id)
 
 
 @socketio.on("connect")
@@ -52,6 +58,11 @@ def on_start_research(data):
         emit("research_error", {"error": "Topic cannot be empty"})
         return
     session_id = request.sid
+    with active_sessions_lock:
+        if session_id in active_sessions:
+            emit("research_error", {"error": "Research already in progress. Please wait."})
+            return
+        active_sessions.add(session_id)
     thread = threading.Thread(
         target=research_worker, args=(topic, session_id), daemon=True
     )

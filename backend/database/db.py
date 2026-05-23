@@ -36,6 +36,8 @@ def save_report(topic: str, content: str) -> int:
     conn.commit()
     report_id = cursor.lastrowid
     conn.close()
+    if report_id is None:
+        raise RuntimeError("Failed to save report: database did not return an ID.")
     return report_id
 
 

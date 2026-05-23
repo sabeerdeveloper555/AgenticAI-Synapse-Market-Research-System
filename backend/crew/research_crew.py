@@ -118,4 +118,4 @@ def run_research(topic: str, emit_log=None) -> str:
 
     result = crew.kickoff()
     log("system", "All agents completed. Report ready.", "done")
-    return str(result)
+    return result.raw if hasattr(result, "raw") else str(result)

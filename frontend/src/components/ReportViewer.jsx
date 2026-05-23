@@ -39,6 +39,10 @@ export default function ReportViewer({ report }) {
     const content = document.querySelector(".report-content");
     if (!content) return;
     const win = window.open("", "_blank");
+    if (!win) {
+      alert("Popup blocked. Please allow popups for this site to export PDF.");
+      return;
+    }
     win.document.write(`<!DOCTYPE html><html><head>
       <meta charset="utf-8"/>
       <title>Synapse — ${report.topic}</title>
@@ -64,9 +68,13 @@ export default function ReportViewer({ report }) {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(report.content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(report.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      alert("Clipboard access denied. Please copy manually.");
+    }
   };
 
   return (

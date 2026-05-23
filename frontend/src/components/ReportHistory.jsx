@@ -5,6 +5,7 @@ export default function ReportHistory({ onLoad, backendUrl }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [clearing, setClearing] = useState(false);
+  const [clearError, setClearError] = useState(null);
 
   const fetchReports = async () => {
     setLoading(true);
@@ -23,11 +24,12 @@ export default function ReportHistory({ onLoad, backendUrl }) {
   const clearHistory = async () => {
     if (!window.confirm("Delete all saved reports? This cannot be undone.")) return;
     setClearing(true);
+    setClearError(null);
     try {
       await fetch(`${backendUrl}/api/reports`, { method: "DELETE" });
       setReports([]);
     } catch {
-      setError("Failed to clear history.");
+      setClearError("Failed to clear history. Try again.");
     } finally {
       setClearing(false);
     }
@@ -123,6 +125,16 @@ export default function ReportHistory({ onLoad, backendUrl }) {
             </button>
           </div>
         </div>
+
+        {clearError && (
+          <div
+            className="mb-4 px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between"
+            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.3)", color: "var(--red)" }}
+          >
+            <span>{clearError}</span>
+            <button onClick={() => setClearError(null)} className="ml-3 font-bold opacity-70 hover:opacity-100">✕</button>
+          </div>
+        )}
 
         <div className="space-y-3">
           {reports.map((r) => (
