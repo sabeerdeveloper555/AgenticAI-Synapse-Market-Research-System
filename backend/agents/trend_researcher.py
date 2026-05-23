@@ -1,9 +1,7 @@
 from crewai import Agent
-from langchain_openai import ChatOpenAI
 
 
 def create_trend_researcher(tools):
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
     return Agent(
         role="Trend Researcher",
         goal=(
@@ -17,9 +15,9 @@ def create_trend_researcher(tools):
             "key developments with precision."
         ),
         tools=tools,
-        llm=llm,
-        verbose=True,
+        llm="gpt-4o-mini",
+        verbose=False,
         allow_delegation=False,
-        max_iter=25,
-        max_execution_time=300,
+        max_iter=8,
+        max_execution_time=240,
     )

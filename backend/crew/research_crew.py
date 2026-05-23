@@ -113,7 +113,7 @@ def run_research(topic: str, emit_log=None) -> str:
         agents=[trend_researcher, strategic_analyst, executive_editor],
         tasks=[research_task, analysis_task, report_task],
         process=Process.sequential,
-        verbose=True,
+        verbose=False,
     )
 
     result = crew.kickoff()

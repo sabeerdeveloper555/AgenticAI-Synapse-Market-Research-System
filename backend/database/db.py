@@ -48,6 +48,13 @@ def get_all_reports():
     return [dict(row) for row in rows]
 
 
+def delete_all_reports():
+    conn = get_connection()
+    conn.execute("DELETE FROM reports")
+    conn.commit()
+    conn.close()
+
+
 def get_report_by_id(report_id: int):
     conn = get_connection()
     row = conn.execute(

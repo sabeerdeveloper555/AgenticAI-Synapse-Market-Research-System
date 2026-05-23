@@ -1,9 +1,7 @@
 from crewai import Agent
-from langchain_openai import ChatOpenAI
 
 
 def create_executive_editor():
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
     return Agent(
         role="Executive Editor",
         goal=(
@@ -17,9 +15,9 @@ def create_executive_editor():
             "complex analysis into crisp, executive-ready prose. Your reports "
             "are known for clarity, structure, and actionable takeaways."
         ),
-        llm=llm,
-        verbose=True,
+        llm="gpt-4o-mini",
+        verbose=False,
         allow_delegation=False,
-        max_iter=15,
-        max_execution_time=180,
+        max_iter=4,
+        max_execution_time=120,
     )

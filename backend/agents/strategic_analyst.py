@@ -1,9 +1,7 @@
 from crewai import Agent
-from langchain_openai import ChatOpenAI
 
 
 def create_strategic_analyst():
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
     return Agent(
         role="Strategic Analyst",
         goal=(
@@ -17,9 +15,9 @@ def create_strategic_analyst():
             "analytical frameworks including SWOT, Porter's Five Forces, and "
             "competitive benchmarking."
         ),
-        llm=llm,
-        verbose=True,
+        llm="gpt-4o-mini",
+        verbose=False,
         allow_delegation=False,
-        max_iter=15,
-        max_execution_time=180,
+        max_iter=4,
+        max_execution_time=120,
     )

@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 from dotenv import load_dotenv
-from database.db import init_db, save_report, get_all_reports, get_report_by_id
+from database.db import init_db, save_report, get_all_reports, get_report_by_id, delete_all_reports
 from crew.research_crew import run_research
 
 load_dotenv(override=True)
@@ -70,6 +70,12 @@ def get_report(report_id):
     if not report:
         return jsonify({"error": "Report not found"}), 404
     return jsonify(report)
+
+
+@app.route("/api/reports", methods=["DELETE"])
+def clear_reports():
+    delete_all_reports()
+    return jsonify({"status": "cleared"})
 
 
 @app.route("/api/health", methods=["GET"])

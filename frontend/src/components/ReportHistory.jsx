@@ -4,6 +4,7 @@ export default function ReportHistory({ onLoad, backendUrl }) {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [clearing, setClearing] = useState(false);
 
   const fetchReports = async () => {
     setLoading(true);
@@ -16,6 +17,19 @@ export default function ReportHistory({ onLoad, backendUrl }) {
       setError("Could not connect to Synapse backend.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const clearHistory = async () => {
+    if (!window.confirm("Delete all saved reports? This cannot be undone.")) return;
+    setClearing(true);
+    try {
+      await fetch(`${backendUrl}/api/reports`, { method: "DELETE" });
+      setReports([]);
+    } catch {
+      setError("Failed to clear history.");
+    } finally {
+      setClearing(false);
     }
   };
 
@@ -78,16 +92,36 @@ export default function ReportHistory({ onLoad, backendUrl }) {
               {reports.length} report{reports.length !== 1 ? "s" : ""} stored locally
             </p>
           </div>
-          <button
-            onClick={fetchReports}
-            className="btn-ghost px-4 py-2 text-xs font-semibold flex items-center gap-1.5"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Refresh
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={fetchReports}
+              className="btn-ghost px-4 py-2 text-xs font-semibold flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
+            <button
+              onClick={clearHistory}
+              disabled={clearing || reports.length === 0}
+              className="px-4 py-2 text-xs font-semibold flex items-center gap-1.5 rounded-xl transition-all duration-150 disabled:opacity-40"
+              style={{
+                background: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                color: "var(--red)",
+              }}
+              onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.background = "rgba(239,68,68,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              {clearing ? "Clearing…" : "Clear History"}
+            </button>
+          </div>
         </div>
 
         <div className="space-y-3">
