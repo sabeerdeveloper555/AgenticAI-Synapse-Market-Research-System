@@ -1,33 +1,14 @@
 # Synapse — Agentic AI Market Research System
 ## Project Document
 
-**Project Title:** Synapse — Agentic AI Market Research System
-**Domain:** Artificial Intelligence / Agentic Systems
-**Category:** Multi-Agent AI Application
-**Tech Stack:** CrewAI · OpenAI GPT-4o-mini · Flask · React 18 · Socket.IO · SQLite
+**Course:** Agentic AI
+**Instructor:** Syed Farhan Mohsin
+**Institution:** Karachi Institute of Economics and Technology (KIET)
 
----
-
-## Table of Contents
-
-1. [Project Overview](#1-project-overview)
-2. [Problem Statement](#2-problem-statement)
-3. [Objectives](#3-objectives)
-4. [System Architecture](#4-system-architecture)
-5. [Technology Stack](#5-technology-stack)
-6. [Agent Design](#6-agent-design)
-7. [Backend Implementation](#7-backend-implementation)
-8. [Frontend Implementation](#8-frontend-implementation)
-9. [Real-Time Communication](#9-real-time-communication)
-10. [Database Layer](#10-database-layer)
-11. [External Tool Integration](#11-external-tool-integration)
-12. [API Reference](#12-api-reference)
-13. [Project Structure](#13-project-structure)
-14. [Setup & Installation](#14-setup--installation)
-15. [Key Features](#15-key-features)
-16. [System Workflow](#16-system-workflow)
-17. [Limitations & Future Enhancements](#17-limitations--future-enhancements)
-18. [Conclusion](#18-conclusion)
+**Group Members:**
+- Sabeer Alam (64884)
+- Syed Danish Mehmood (64999)
+- Syed Ali Haider Zaidi (65051)
 
 ---
 
