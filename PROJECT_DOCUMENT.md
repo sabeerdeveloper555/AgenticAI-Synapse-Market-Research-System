@@ -114,7 +114,7 @@ Synapse implements three CrewAI agents, each with a distinct role, goal, backsto
 | Property | Value |
 |---|---|
 | **Role** | Trend Researcher |
-| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 10 |
+| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 8 |
 | **Tools** | `SerperSearchTool` (live web search) |
 | **Goal** | Collect latest market trends, statistics, and emerging patterns using live web search |
 | **Backstory** | Seasoned market intelligence analyst with 15 years scanning global data sources |
@@ -132,7 +132,7 @@ Synapse implements three CrewAI agents, each with a distinct role, goal, backsto
 | Property | Value |
 |---|---|
 | **Role** | Strategic Analyst |
-| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 8 |
+| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 4 |
 | **Tools** | None (reasoning-only agent) |
 | **Goal** | Analyze raw market data to produce SWOT analysis, risk matrix, and growth opportunities |
 | **Backstory** | Top-tier business strategist, MBA from Wharton, advisor to Fortune 500 companies |
@@ -150,7 +150,7 @@ Synapse implements three CrewAI agents, each with a distinct role, goal, backsto
 | Property | Value |
 |---|---|
 | **Role** | Executive Editor |
-| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 8 |
+| **LLM** | GPT-4o-mini, Temp 0.3, Max Iter 4 |
 | **Tools** | None (writing-only agent) |
 | **Goal** | Transform strategic analysis into a polished, professional Markdown report |
 | **Backstory** | Award-winning business journalist and former editor at McKinsey Quarterly |
@@ -562,6 +562,8 @@ VITE_BACKEND_URL=http://localhost:5000
 | **Report sharing** | Shareable links for generated reports |
 | **Feedback loop** | Allow users to rate report quality to improve prompt engineering |
 | **Multi-LLM support** | Switch between GPT-4o, Claude, Gemini from a settings panel |
+| **Agentic Loop** | Introduce a self-correction loop where the Executive Editor evaluates its own report against quality criteria and re-runs specific agents if the output falls below a confidence threshold — enabling iterative refinement without human intervention |
+| **LangGraph Integration** | Replace the linear CrewAI sequential pipeline with a LangGraph state machine, enabling conditional branching, parallel agent execution, and dynamic routing — for example, triggering a deeper research pass only when initial search results are insufficient |
 
 ---
 
